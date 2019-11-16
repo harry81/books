@@ -1,4 +1,5 @@
 import React from "react";
+import axios from 'axios';
 
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
@@ -6,13 +7,11 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
-
 import Typography from '@material-ui/core/Typography';
 
-
-import axios from 'axios';
-
 import MyAppBar from "./MyAppBar";
+
+const BASE_API = process.env.REACT_APP_API_ENDPOINT;
 
 
 class IndexPage extends React.Component {
@@ -23,15 +22,13 @@ class IndexPage extends React.Component {
     };
 
     this.onSearchChange = this.onSearchChange.bind(this);
-
   }
 
-  componentDidMount () {
-    axios.get('https://staging-backend.hoodpub.com/api/book/',
-              {params: {title: '자연어'}})
+  getBooks = (title) => {
+    console.log(title);
+    axios.get(BASE_API + '/api/book/', {params: {title}})
       .then(response =>
             {
-              console.log(response);
               this.setState({
                 books: response.data
               })
@@ -39,18 +36,10 @@ class IndexPage extends React.Component {
   }
 
   onSearchChange(e){
-
-    axios.get('https://staging-backend.hoodpub.com/api/book/',
-              {params: {title: e.target.value}})
-      .then(response =>
-            {
-              console.log(response);
-              this.setState({
-                books: response.data
-              })
-            })
+    if (e.key === 'Enter') {
+      this.getBooks(e.target.value);
+    }
   }
-
 
   render() {
     return <div>
@@ -64,21 +53,13 @@ export default IndexPage;
 
 
 class BookListComponent extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      error: null,
-      isLoaded: false,
-    };
-  }
 
   render(){
-    const { error, isLoaded } = this.state;
     const books = this.props.books;
 
     return (<div>
               {books.map(item => (
-                <Card key={item.isbn}>
+                <Card key={item.url}>
                   <CardActionArea>
                     <CardMedia
                       component="img"

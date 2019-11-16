@@ -70,7 +70,7 @@ function MyAppBar(props) {
           </div>
           <InputBase
             placeholder="Search…"
-            onChange={props.onSearchChange}
+            onKeyDown={props.onSearchChange}
             classes={{
               root: classes.inputRoot,
               input: classes.inputInput,
