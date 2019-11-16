@@ -16,28 +16,14 @@ import MyAppBar from "./MyAppBar";
 
 
 class IndexPage extends React.Component {
-
-
-  render() {
-    return <div>
-             <MyAppBar/>
-             <BookListComponent/>
-           </div>;
-  }
-}
-
-export default IndexPage;
-
-
-
-class BookListComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      error: null,
-      isLoaded: false,
       books: []
     };
+
+    this.onSearchChange = this.onSearchChange.bind(this);
+
   }
 
   componentDidMount () {
@@ -47,14 +33,48 @@ class BookListComponent extends React.Component {
             {
               console.log(response);
               this.setState({
-                isLoaded:true,
-                books:response.data
+                books: response.data
               })
             })
   }
 
+  onSearchChange(e){
+
+    axios.get('https://staging-backend.hoodpub.com/api/book/',
+              {params: {title: e.target.value}})
+      .then(response =>
+            {
+              console.log(response);
+              this.setState({
+                books: response.data
+              })
+            })
+  }
+
+
+  render() {
+    return <div>
+             <MyAppBar onSearchChange={this.onSearchChange} />
+             <BookListComponent books={this.state.books}/>
+           </div>;
+  }
+}
+
+export default IndexPage;
+
+
+class BookListComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: null,
+      isLoaded: false,
+    };
+  }
+
   render(){
-    const { error, isLoaded, books } = this.state;
+    const { error, isLoaded } = this.state;
+    const books = this.props.books;
 
     return (<div>
               {books.map(item => (
