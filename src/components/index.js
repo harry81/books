@@ -1,59 +1,27 @@
 import React from "react";
-import { makeStyles } from '@material-ui/core/styles';
+
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
+
 import Typography from '@material-ui/core/Typography';
 
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 
+import axios from 'axios';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    flexGrow: 1,
-  },
-  menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  title: {
-    flexGrow: 1,
-  },
-}));
+import MyAppBar from "./MyAppBar";
 
-
-function MyAppBar() {
-  const classes = useStyles();
-
-  return (
-    <div className={classes.root}>
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
-            Book tracking
-          </Typography>
-          <Button color="inherit">Login</Button>
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
-}
 
 class IndexPage extends React.Component {
+
 
   render() {
     return <div>
              <MyAppBar/>
-             <Home/>
-             <Tracks/>
+             <BookListComponent/>
            </div>;
   }
 }
@@ -62,107 +30,67 @@ export default IndexPage;
 
 
 
-function Home() {
-  return <h2>Home</h2>;
-}
+class BookListComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      error: null,
+      isLoaded: false,
+      books: []
+    };
+  }
 
+  componentDidMount () {
+    axios.get('https://staging-backend.hoodpub.com/api/book/',
+              {params: {title: '자연어'}})
+      .then(response =>
+            {
+              console.log(response);
+              this.setState({
+                isLoaded:true,
+                books:response.data
+              })
+            })
+  }
 
+  render(){
+    const { error, isLoaded, books } = this.state;
 
-function Tracks() {
-  const classes = useStyles();
+    return (<div>
+              {books.map(item => (
+                <Card key={item.isbn}>
+                  <CardActionArea>
+                    <CardMedia
+                      component="img"
+                      alt={item.title}
+                      height="140"
+                      image={item.thumbnail}
+                      title="Contemplative Reptile"
+                    />
+                    <CardContent>
+                      <Typography gutterBottom variant="h5" component="h5">
+                        {item.title}
+                      </Typography>
+                      <Typography variant="body2" component="p">
+                        {item.authors} {item.publishier}
+                      </Typography>
+                      <Typography variant="body2" color="textSecondary" component="p">
+                        {item.contents}
+                      </Typography>
+                    </CardContent>
+                  </CardActionArea>
+                  <CardActions>
+                    <Button size="small" color="primary">
+                      내용
+                    </Button>
+                    <Button size="small" color="primary">
+                      읽기
+                    </Button>
+                  </CardActions>
+                </Card>
 
-  return (
-    <div>
-
-      <Card >
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            alt="Contemplative Reptile"
-            height="140"
-            image="https://material-ui.com//static/images/cards/contemplative-reptile.jpg"
-            title="Contemplative Reptile"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              Lizard
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-              across all continents except Antarctica
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-        <CardActions>
-          <Button size="small" color="primary">
-            Share
-          </Button>
-          <Button size="small" color="primary">
-            Learn More
-          </Button>
-        </CardActions>
-      </Card>
-
-      {/* -- */}
-      <Card className={classes.card}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            alt="Contemplative Reptile"
-            height="140"
-            image="https://material-ui.com//static/images/cards/contemplative-reptile.jpg"
-            title="Contemplative Reptile"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              Lizard
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-              across all continents except Antarctica
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-        <CardActions>
-          <Button size="small" color="primary">
-            Share
-          </Button>
-          <Button size="small" color="primary">
-            Learn More
-          </Button>
-        </CardActions>
-      </Card>
-
-      {/* -- */}
-      <Card className={classes.card}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            alt="Contemplative Reptile"
-            height="140"
-            image="https://material-ui.com//static/images/cards/contemplative-reptile.jpg"
-            title="Contemplative Reptile"
-          />
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              Lizard
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging
-              across all continents except Antarctica
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-        <CardActions>
-          <Button size="small" color="primary">
-            Share
-          </Button>
-          <Button size="small" color="primary">
-            Learn More
-          </Button>
-        </CardActions>
-      </Card>
-
-    </div>
-  );
+              ))}
+            </div>
+           )
+  }
 }
