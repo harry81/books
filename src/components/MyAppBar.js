@@ -57,13 +57,7 @@ const useStyles = makeStyles(theme => ({
 function MyAppBar(props) {
   const classes = useStyles();
 
-  return (
-    <AppBar position="static">
-      <Toolbar>
-        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-          <MenuIcon />
-        </IconButton>
-
+  const display_search =
         <div className={classes.search}>
           <div className={classes.searchIcon}>
             <SearchIcon />
@@ -77,7 +71,21 @@ function MyAppBar(props) {
             }}
             inputProps={{ 'aria-label': 'search' }}
           />
-        </div>
+        </div>;
+
+  const display = props.title ? props.title : display_search;
+
+  return (
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <MenuIcon />
+        </IconButton>
+
+        {display}
+
+
+
       </Toolbar>
     </AppBar>
   );

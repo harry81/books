@@ -30,12 +30,12 @@ class Shelf extends React.Component {
   render() {
     const shelf = this.state.shelf;
 
-    return <div>
+    return (<div>
       {
         shelf.map(item => (
             <ul key={item.id}>{item.book.title}</ul>
         ))}
-    </div>;
+    </div>);
   }
 }
 

@@ -85,14 +85,14 @@ class BookListComponent extends React.Component {
           <Grid key={item.url} item xs={12} sm={12} md={3}>
             <Card >
               <CardContent>
-                <Typography gutterBottom variant="h5" component="h5">
-                  {item.title}
-                </Typography>
-                <Grid container direction="row" justify="center" alignItems="center">
+                <Grid container direction="row" justify="flex-start" alignItems="flex-start">
                   <Grid item xs>
                     <img src={item.thumbnail} />
                   </Grid>
                   <Grid item xs>
+                    <Typography gutterBottom >
+                      {item.title}
+                    </Typography>
                     <Typography variant="body2" component="p">
                       {item.authors} {item.publishier}
                     </Typography>

@@ -39,7 +39,7 @@ class IndexPage extends React.Component {
 
   render() {
     return <div>
-             <MyAppBar onSearchChange={this.onSearchChange} />
+             <MyAppBar onSearchChange={this.onSearchChange} title="hello" />
              <BookListComponent books={this.state.books}/>
            </div>;
   }
