@@ -2,6 +2,7 @@ import React from "react";
 import axios from 'axios';
 
 import Grid from '@material-ui/core/Grid';
+import MyAppBar from '../components/MyAppBar.js'
 
 const BASE_API = process.env.REACT_APP_API_ENDPOINT;
 
@@ -34,6 +35,8 @@ class Shelf extends React.Component {
 
     return (
       <div>
+        <MyAppBar  />
+
         <Grid container spacing={3}>
           {
             shelf.map(item => (

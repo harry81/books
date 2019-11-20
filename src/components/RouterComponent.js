@@ -3,10 +3,12 @@ import IndexPage from "../components/index";
 import Shelf from "../components/shelf";
 import React from "react";
 
+
 const AppRouter = () => {
 
   return(
-    <div style={style}>
+      <div style={style}>
+
       <Router>
         <Switch>
           <Route path="/" exact component={IndexPage} />

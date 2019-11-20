@@ -4,13 +4,9 @@ import React from "react";
 import BookListComponent from "./booksearch";
 
 
-class IndexPage extends React.Component {
+export default function IndexPage() {
 
-  render() {
-    return <div>
-             <BookListComponent />
-           </div>;
-  }
+  return (<div>
+            <BookListComponent />
+            </div>);
 }
-
-export default IndexPage;

@@ -9,9 +9,10 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import SearchIcon from '@material-ui/icons/Search';
+import InputBase from '@material-ui/core/InputBase';
 
 import Grid from '@material-ui/core/Grid';
-
 import MyAppBar from '../components/MyAppBar.js'
 
 
@@ -71,11 +72,21 @@ class BookListComponent extends React.Component {
 
   render(){
     const books = this.state.books;
+    const display_search = <div>
+                             <SearchIcon />
+                             <InputBase
+                               placeholder="Search…"
+                               onKeyDown={this.onSearchChange}
+                               inputProps={{ 'aria-label': 'search' }}
+                             />
+                           </div>;
 
     return (
       <Grid container>
+        <MyAppBar  />
+
         <Grid>
-          <MyAppBar onSearchChange={this.onSearchChange}  />
+          {display_search}
         </Grid>
         <Grid container spacing={3}>
           {books.map(item => (

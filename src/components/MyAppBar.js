@@ -3,9 +3,25 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import Button from '@material-ui/core/Button';
+import Drawer from '@material-ui/core/Drawer';
+
+import { NavLink } from 'react-router-dom';
+
+import List from '@material-ui/core/List';
+import Divider from '@material-ui/core/Divider';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+
+
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import { fade, makeStyles } from '@material-ui/core/styles';
+
+import InboxIcon from '@material-ui/icons/MoveToInbox';
+import MailIcon from '@material-ui/icons/Mail';
+
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -57,6 +73,47 @@ const useStyles = makeStyles(theme => ({
 function MyAppBar(props) {
   const classes = useStyles();
 
+  const [state, setState] = React.useState({
+    top: false,
+    left: false,
+    bottom: false,
+    right: false,
+  });
+
+  const toggleDrawer = (side, open) => event => {
+    console.log(side, open);
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+
+    setState({ ...state, [side]: open });
+  };
+
+
+  const sideList = side => (
+    <div
+      className={classes.list}
+      role="presentation"
+      onClick={toggleDrawer(side, false)}
+      onKeyDown={toggleDrawer(side, false)}
+    >
+      <List>
+        <ListItem button key="search" to="/" component={NavLink} >
+          <ListItemIcon>{ <InboxIcon />}</ListItemIcon>
+          <ListItemText primary="Search" />
+        </ListItem>
+
+        <ListItem button key="Shelf" to="/shelf/" component={NavLink} >
+          <ListItemIcon>{ <MailIcon />}</ListItemIcon>
+          <ListItemText primary="Shelf" />
+        </ListItem>
+      </List>
+
+      <Divider />
+    </div>
+  );
+
+
   const display_search =
         <div className={classes.search}>
           <div className={classes.searchIcon}>
@@ -78,9 +135,14 @@ function MyAppBar(props) {
   return (
     <AppBar position="static">
       <Toolbar>
-        <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+        <IconButton onClick={toggleDrawer('left', true)} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
           <MenuIcon />
         </IconButton>
+
+        <Drawer open={state.left} onClose={toggleDrawer('left', false)}>
+          {sideList('left')}
+        </Drawer>
+
 
         {display}
 
