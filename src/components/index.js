@@ -30,6 +30,8 @@ class IndexPage extends React.Component {
   onSearchChange(e){
     if (e.key === 'Enter') {
       this.getBooks(e.target.value);
+      e.target.blur();
+
     }
   }
 
@@ -39,7 +41,7 @@ class IndexPage extends React.Component {
 
   render() {
     return <div>
-             <MyAppBar onSearchChange={this.onSearchChange} title="hello" />
+             <MyAppBar onSearchChange={this.onSearchChange}  />
              <BookListComponent books={this.state.books}/>
            </div>;
   }
