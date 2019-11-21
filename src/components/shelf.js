@@ -42,23 +42,24 @@ class Shelf extends React.Component {
       <div>
         <MyAppBar title="책장" />
 
-        <Grid container spacing={3}>
+        <Grid container spacing={0}>
           {
             shelf.map(item => (
               <Grid key={item.id} item xs={12} sm={6} md={3}>
-                <Grid container spacing={5}>
+                <Grid container>
                   <Grid item xs={3} align='center'>
                     <img src={item.book.image}/>
+                    <br/>
                     <Typography variant="overline" gutterBottom >
                       {item.page} / 238
                     </Typography>
 
                   </Grid>
                   <Grid item xs={9}>
-                    <Typography variant="inherit" gutterBottom >
+                    <Typography variant="body2" gutterBottom >
                       {item.book.title}
                     </Typography>
-                    <Typography variant="subtitle2" gutterBottom >
+                    <Typography variant="subtitle2">
                       <Moment format="YYYY/MM/DD">{item.created_at}</Moment>
                     </Typography>
 

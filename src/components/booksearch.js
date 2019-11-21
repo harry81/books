@@ -12,6 +12,13 @@ import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 
+import Paper from '@material-ui/core/Paper';
+import Divider from '@material-ui/core/Divider';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import DirectionsIcon from '@material-ui/icons/Directions';
+
+
 import Grid from '@material-ui/core/Grid';
 import MyAppBar from '../components/MyAppBar.js'
 
@@ -72,23 +79,25 @@ class BookListComponent extends React.Component {
 
   render(){
     const books = this.state.books;
-    const display_search = <div>
-                             <SearchIcon />
-                             <InputBase
-                               placeholder="Search…"
-                               onKeyDown={this.onSearchChange}
-                               inputProps={{ 'aria-label': 'search' }}
-                             />
-                           </div>;
+
+    const paper_search =
+          <Paper component="form" >
+            <InputBase
+              placeholder="책검색"
+              inputProps={{ 'aria-label': 'search google maps' }}
+              onKeyDown={this.onSearchChange}
+            />
+            <IconButton type="submit"  aria-label="search">
+              <SearchIcon />
+            </IconButton>
+            <Divider orientation="vertical" />
+          </Paper>
 
     return (
       <Grid container>
-        <MyAppBar title="검색" />
+        <MyAppBar title={paper_search} />
 
-        <Grid>
-          {display_search}
-        </Grid>
-        <Grid container spacing={3}>
+        <Grid container>
           {books.map(item => (
             <Grid key={item.url} item xs={12} sm={6} md={3}>
               <Card >
