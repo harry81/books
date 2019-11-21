@@ -83,7 +83,7 @@ class BookListComponent extends React.Component {
 
     return (
       <Grid container>
-        <MyAppBar  />
+        <MyAppBar title="검색" />
 
         <Grid>
           {display_search}

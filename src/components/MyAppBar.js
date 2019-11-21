@@ -100,12 +100,12 @@ function MyAppBar(props) {
       <List>
         <ListItem button key="search" to="/" component={NavLink} >
           <ListItemIcon>{ <InboxIcon />}</ListItemIcon>
-          <ListItemText primary="Search" />
+          <ListItemText primary="검색" />
         </ListItem>
 
         <ListItem button key="Shelf" to="/shelf/" component={NavLink} >
           <ListItemIcon>{ <MailIcon />}</ListItemIcon>
-          <ListItemText primary="Shelf" />
+          <ListItemText primary="책장" />
         </ListItem>
       </List>
 
@@ -142,12 +142,7 @@ function MyAppBar(props) {
         <Drawer open={state.left} onClose={toggleDrawer('left', false)}>
           {sideList('left')}
         </Drawer>
-
-
         {display}
-
-
-
       </Toolbar>
     </AppBar>
   );

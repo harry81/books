@@ -2,6 +2,11 @@ import React from "react";
 import axios from 'axios';
 
 import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Moment from 'react-moment';
+
+
+
 import MyAppBar from '../components/MyAppBar.js'
 
 const BASE_API = process.env.REACT_APP_API_ENDPOINT;
@@ -35,19 +40,38 @@ class Shelf extends React.Component {
 
     return (
       <div>
-        <MyAppBar  />
+        <MyAppBar title="책장" />
 
         <Grid container spacing={3}>
           {
             shelf.map(item => (
-              <Grid container xs key={item.id} >
-                <Grid spacing={3}>
-                  <img src={item.book.image}/>
-                </Grid>
+              <Grid key={item.id} item xs={12} sm={6} md={3}>
+                <Grid container spacing={5}>
+                  <Grid item xs={3} align='center'>
+                    <img src={item.book.image}/>
+                    <Typography variant="overline" gutterBottom >
+                      {item.page} / 238
+                    </Typography>
 
+                  </Grid>
+                  <Grid item xs={9}>
+                    <Typography variant="inherit" gutterBottom >
+                      {item.book.title}
+                    </Typography>
+                    <Typography variant="subtitle2" gutterBottom >
+                      <Moment format="YYYY/MM/DD">{item.created_at}</Moment>
+                    </Typography>
+
+                    <Typography variant="overline" gutterBottom >
+                      {item.status}
+                    </Typography>
+
+                  </Grid>
+                </Grid>
               </Grid>
             ))}
         </Grid>
+
       </div>
     );
   }
