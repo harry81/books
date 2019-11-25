@@ -12,7 +12,7 @@ const AppRouter = () => {
       <Router>
         <Switch>
           <Route path="/" exact component={IndexPage} />
-          <Route path="/shelf/" exact component={Shelf} />
+          <Route path="/shelf/:id?" exact component={Shelf} />
         </Switch>
       </Router>
     </div>

@@ -15,9 +15,8 @@ import InputBase from '@material-ui/core/InputBase';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import DirectionsIcon from '@material-ui/icons/Directions';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Grid from '@material-ui/core/Grid';
 import MyAppBar from '../components/MyAppBar.js'
@@ -25,6 +24,11 @@ import MyAppBar from '../components/MyAppBar.js'
 
 const BASE_API = process.env.REACT_APP_API_ENDPOINT;
 
+toast.configure({
+  autoClose: 2000,
+  draggable: false,
+  //etc you get the idea
+});
 
 class BookListComponent extends React.Component {
   constructor(props) {
@@ -32,6 +36,7 @@ class BookListComponent extends React.Component {
     this.onReadBook = this.onReadBook.bind(this);
     this.onDetailBook = this.onDetailBook.bind(this);
     this.onSearchChange = this.onSearchChange.bind(this);
+    this.notify = this.notify.bind(this);
 
     this.state = {
       books: []
@@ -43,12 +48,14 @@ class BookListComponent extends React.Component {
     this.readBook(isbn);
   }
 
-  readBook = (isbn) => {
+  readBook = (book) => {
     const url = BASE_API + '/api/shelf/';
-    axios.post(url, {isbn})
+
+    axios.post(url, {isbn: book.isbn})
       .then(response =>
             {
-              console.log('read');
+              const message = "등록 - " + book.title;
+              this.notify(message);
             })
   }
 
@@ -74,16 +81,23 @@ class BookListComponent extends React.Component {
   }
 
   componentDidMount() {
-    this.getBooks('python');
+    this.getBooks('인문학');
+  }
+
+  notify(message) {
+    toast.info(message, {
+      position: toast.POSITION.BOTTOM_CENTER,
+      hideProgressBar: true
+    });
   }
 
   render(){
     const books = this.state.books;
 
     const paper_search =
-          <Paper component="form" >
+          <Paper component="form" width="100%" >
             <InputBase
-              placeholder="책검색"
+              placeholder="   책검색"
               inputProps={{ 'aria-label': 'search google maps' }}
               onKeyDown={this.onSearchChange}
             />
@@ -120,10 +134,10 @@ class BookListComponent extends React.Component {
                   </Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small" color="primary" onClick={()=> this.onDetailBook(item.isbn)}>
+                  <Button size="small" color="primary" onClick={()=> this.notify(item.isbn)}>
                     내용
                   </Button>
-                  <Button size="small" color="primary" onClick={()=> this.onReadBook(item.isbn)}>
+                  <Button size="small" color="primary" onClick={()=> this.onReadBook(item)}>
                     읽기
                   </Button>
                 </CardActions>
