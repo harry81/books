@@ -15,7 +15,7 @@ import InputBase from '@material-ui/core/InputBase';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Grid from '@material-ui/core/Grid';
@@ -118,7 +118,7 @@ class BookListComponent extends React.Component {
                 <CardContent>
                   <Grid container direction="row" justify="flex-start" alignItems="flex-start">
                     <Grid item xs>
-                      <img src={item.thumbnail} />
+                      <img src={item.thumbnail} alt={item.title}/>
                     </Grid>
                     <Grid item xs>
                       <Typography gutterBottom >
