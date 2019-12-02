@@ -1,11 +1,17 @@
 import React from "react";
 import axios from 'axios';
 
-import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Moment from 'react-moment';
 import Button from '@material-ui/core/Button';
-import {Link } from "react-router-dom";
+
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import CardContent from '@material-ui/core/CardContent';
+import CardActions from '@material-ui/core/CardActions';
+import Collapse from '@material-ui/core/Collapse';
+import Avatar from '@material-ui/core/Avatar';
+import IconButton from '@material-ui/core/IconButton';
 
 import TextField from '@material-ui/core/TextField';
 import Dialog from '@material-ui/core/Dialog';
@@ -13,6 +19,14 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { red } from '@material-ui/core/colors';
+import FavoriteIcon from '@material-ui/icons/Favorite';
+import ShareIcon from '@material-ui/icons/Share';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import clsx from 'clsx';
 
 import MyAppBar from '../components/MyAppBar.js'
 
@@ -42,9 +56,7 @@ class Shelf extends React.Component {
   }
 
   handleClose(value){
-    this.setState({page: value});
     this.addBookProgress(value);
-    this.getShelf(this.state.shelf_id);
   }
 
   addBookProgress = (page) => {
@@ -54,7 +66,8 @@ class Shelf extends React.Component {
     axios.post(url, {page: page})
       .then(response =>
             {
-              console.log(response.data);
+              this.getShelf(this.state.shelf_id);
+              this.setState({page: ""});
             })
   }
 
@@ -75,53 +88,7 @@ class Shelf extends React.Component {
 
     const display_book =
           (typeof shelf.book !== 'undefined') ?
-          <div>
-            <Grid container spacing={3} direction='column'>
-              <Grid item >
-                <Grid container spacing={0}>
-                  <Grid item xs={3} align='center'>
-                    <img src={shelf.book.image} alt='{shelf.book.title}'/>
-                    <br/>
-                    <Typography variant="overline" gutterBottom >
-                      {shelf.current_page} / 238
-                    </Typography>
-
-                  </Grid>
-                  <Grid item xs >
-                    <Typography variant="body2" gutterBottom >
-                      <Link to={`/shelf/${shelf.id}`}>{shelf.book.title}</Link>
-                    </Typography>
-                    <Typography variant="subtitle2">
-                      <Moment format="YYYY/MM/DD">{shelf.created_at}</Moment>
-                    </Typography>
-
-                    <Typography variant="overline" gutterBottom >
-                      {shelf.status}
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid container spacing={3}>
-              <Grid item xs align='center'>
-                {shelf.bookprogresses.map(item => (
-                  <div>
-                    {item.page} /
-                    <Moment format="YYYY/MM/DD">{item.created_at}</Moment>
-                  </div>
-                ))}
-
-              </Grid>
-            </Grid>
-            <Grid container spacing={3}>
-              <Grid item xs align='center'>
-                {this.state.selectedValue}
-                <FormDialog onClose={this.handleClose}/>
-              </Grid>
-            </Grid>
-          </div>
-
+          <ShelfCard shelf={shelf} refresh_shelf={this.getShelf}/>
           : "empty";
 
     return (
@@ -136,18 +103,126 @@ class Shelf extends React.Component {
 export default Shelf;
 
 
-function FormDialog(props) {
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    card: {
+    },
+    media: {
+      height: 0,
+      paddingTop: '56.25%', // 16:9
+    },
+    expand: {
+      transform: 'rotate(0deg)',
+      marginLeft: 'auto',
+      transition: theme.transitions.create('transform', {
+        duration: theme.transitions.duration.shortest,
+      }),
+    },
+    expandOpen: {
+      transform: 'rotate(180deg)',
+    },
+    avatar: {
+      backgroundColor: red[500],
+    },
+  }),
+);
+
+function ShelfCard(props) {
+  const classes = useStyles();
+  const {shelf, refresh_shelf} = props;
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
+  const handleClose = (shelf_id, page) => {
+    addBookProgress(shelf_id, page);
+  };
+
+  const addBookProgress = (shelf_id, page) => {
+    const url = BASE_API + '/api/shelf/' + shelf_id + '/bookprogress/' ;
+
+    axios.post(url, {page: page})
+      .then(response =>
+            {
+              refresh_shelf(shelf_id)
+            })
+  }
+
+
+  return  (
+    <Card className={classes.card}>
+      <CardHeader
+        avatar={
+          <Avatar aria-label="recipe" className={classes.avatar}>
+            R
+          </Avatar>
+        }
+        action={
+          <IconButton aria-label="settings">
+            <MoreVertIcon />
+          </IconButton>
+        }
+        title={shelf.book.author}
+        subheader={<Moment format="YYYY/MM/DD">{shelf.book.created_at}</Moment>}/>
+      <div>
+        <CardContent align='center'>
+          <img src={shelf.book.image}/>
+          <Typography variant="body2" color="textSecondary" component="p">
+            {shelf.book.title}
+
+            <br/>
+            {shelf.current_page} / 238
+            ({ Math.round(shelf.current_page / 238 * 100) }%)
+            </Typography>
+            <AddPageDialog onClose={handleClose} shelf_id={shelf.id}/>
+        </CardContent>
+      </div>
+      <CardActions disableSpacing>
+        <IconButton aria-label="add to favorites">
+          <FavoriteIcon />
+        </IconButton>
+        <IconButton aria-label="share">
+          <ShareIcon />
+        </IconButton>
+        <IconButton
+          className={clsx(classes.expand, {
+            [classes.expandOpen]: expanded,
+          })}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          aria-label="show more"
+        >
+          <ExpandMoreIcon />
+        </IconButton>
+      </CardActions>
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+          <Typography paragraph>
+            {shelf.book.description}
+          </Typography>
+        </CardContent>
+      </Collapse>
+    </Card>
+  );
+}
+
+
+
+function AddPageDialog(props) {
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState("");
-  const {onClose} = props;
+  const {onClose, shelf_id} = props;
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const handleClose = () => {
-    onClose(selectedValue);
+    onClose(shelf_id, selectedValue);
     setOpen(false);
+    setSelectedValue("");
   };
 
   const handleChange = (event) => {

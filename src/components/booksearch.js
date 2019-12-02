@@ -5,7 +5,6 @@ import axios from 'axios';
 import { withRouter } from 'react-router-dom'
 
 import Card from '@material-ui/core/Card';
-import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -56,6 +55,7 @@ class BookListComponent extends React.Component {
             {
               const message = "등록 - " + book.title;
               this.notify(message);
+              this.props.history.push('/shelf/')
             })
   }
 
@@ -108,44 +108,35 @@ class BookListComponent extends React.Component {
           </Paper>
 
     return (
-      <Grid container>
+      <Grid container spacing={1}>
         <MyAppBar title={paper_search} />
 
-        <Grid container>
-          {books.map(item => (
-            <Grid key={item.url} item xs={12} sm={6} md={3}>
-              <Card >
-                <CardContent>
-                  <Grid container direction="row" justify="flex-start" alignItems="flex-start">
-                    <Grid item xs>
-                      <img src={item.thumbnail} alt={item.title}/>
-                    </Grid>
-                    <Grid item xs>
-                      <Typography gutterBottom >
-                        {item.title}
-                      </Typography>
-                      <Typography variant="body2" component="p">
-                        {item.authors} {item.publishier}
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                  <Typography variant="body2" color="textSecondary" component="p">
-                    {item.contents}
-                  </Typography>
-                </CardContent>
-                <CardActions>
-                  <Button size="small" color="primary" onClick={()=> this.notify(item.isbn)}>
-                    내용
-                  </Button>
-                  <Button size="small" color="primary" onClick={()=> this.onReadBook(item)}>
-                    읽기
-                  </Button>
-                </CardActions>
-              </Card>
+        {books.map(item => (
+          <Grid key={item.url} item direction="row" container xs={12} sm={6} md={3} spacing={3}>
+            <Grid item xs={3}>
+              <img src={item.thumbnail} alt={item.title} width="100%"/>
             </Grid>
 
-          ))}
-        </Grid>
+            <Grid item xs>
+              <Grid item container direction='column'>
+                <Grid item>
+                  <Typography>
+                    {item.title}
+                  </Typography>
+                  <Typography variant="body2" component="p">
+                    {item.authors} {item.publishier}
+                  </Typography>
+                </Grid>
+
+                <Button size="small" color="primary" onClick={()=> this.onReadBook(item)}>
+                  책장추가
+                </Button>
+
+              </Grid>
+            </Grid>
+          </Grid>
+
+        ))}
       </Grid>
 
     )
